@@ -1,7 +1,22 @@
 server {
-  listen 80 default_server;
   server_name {{ passenger_server_name }};
+  {%- if nginx_ssl -%}
+  listen 443 default_server;
+  ssl on;
+  ssl_certificate /etc/ssl/{{ passenger_server_name }}.crt;
+  ssl_certificate_key /etc/ssl/{{ passenger_server_name }}.key;
+  {%- else -%}
+  listen 80 default_server;
+  {%- endif -%}
   passenger_enabled on;
   passenger_app_env {{ passenger_app_env }};
   root {{ passenger_app_root }};
 }
+
+{% if nginx_ssl and nginx_ssl_redirect_http_to_https -%}
+server {
+  server_name {{ passenger_server_name }};
+  listen 80 default_server;
+  return 301 https://{{ passenger_server_name }}$request_uri;
+}
+{%- endif -%}

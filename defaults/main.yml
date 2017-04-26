@@ -10,3 +10,7 @@ nginx_worker_processes: "{{ ansible_processor_vcpus | default(ansible_processor_
 nginx_worker_connections: "768"
 nginx_keepalive_timeout: "65"
 nginx_remove_default_vhost: true
+nginx_ssl: false
+nginx_ssl_redirect_http_to_https: false
+nginx_ssl_key: changeme
+nginx_ssl_certificate: changeme
